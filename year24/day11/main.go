@@ -131,7 +131,49 @@ func sol2() {
 	fmt.Println(blink2(stones, blinks))
 }
 
+func blink3(stones []stone, blinks int) int{
+
+	mem := make(map[stone]int, 1 << 10)
+	for _, s := range stones {
+		mem[s]++
+	}
+	newMem := make(map[stone]int, 1 << 10)
+
+
+	for i := 0; i < blinks; i++ {
+		for key := range newMem {
+			delete(newMem, key)
+		}
+		for k, v := range mem {
+			if conditionRule1(k) {
+				newMem[rule1(k)] += v
+			} else if conditionRule2(k) {
+				l, r := rule2(k)
+				newMem[l] += v
+				newMem[r] += v
+			} else if conditionRule3(k) {
+				newMem[rule3(k)] += v
+			}
+		}
+		mem, newMem = newMem, mem
+	}
+
+	sum := 0
+	for _, v := range mem {
+		sum += v
+	}
+
+	return sum
+}
+
+func sol3() {
+	stones := parse("input.txt")
+	blinks := 75
+	fmt.Println(blink3(stones, blinks))
+}
+
 func main() {
 	sol1()
 	sol2()
+	sol3()
 }
