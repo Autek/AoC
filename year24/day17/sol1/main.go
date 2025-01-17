@@ -30,18 +30,17 @@ type instruction interface{
 }
 
 func mapOperand(i int, memory []int) int{
-	if i < 0 || i >= 7 {
-		panic("unknown operand")
-	} else if i <= 3 {
+	switch {
+	case i >= 0 && i <= 3:
 		return i
-	} else if i == 4 {
+	case i == 4:
 		return memory[a]
-	} else if i == 5 {
+	case i == 5:
 		return memory[b]
-	} else if i == 6 {
+	case i == 6:
 		return memory[c]
 	}
-	panic("never reached")
+	panic("unknown operand")
 }
 
 type adv struct {}
@@ -143,8 +142,8 @@ func stdout(output []int) {
 	fmt.Println(out)
 }
 
-func sol1() {
-	A, B, C, p := parse("input.txt")
+func sol() {
+	A, B, C, p := parse("../input.txt")
 	memory := make([]int, 3)
 	memory[a] = A
 	memory[b] = B
@@ -152,4 +151,8 @@ func sol1() {
 	output := []int{}
 	runProgram(p, &output, memory)
 	stdout(output)
+}
+
+func main() {
+	sol()
 }
