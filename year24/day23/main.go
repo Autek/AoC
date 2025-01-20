@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"os"
@@ -15,7 +16,7 @@ func newConnections() connections {
 	return make(connections)
 }
 
-func (connection *connection)has_same_endpoint(c *connection) bool {
+func (connection *connection) has_same_endpoint(c *connection) bool {
 	c1, c2 := *connection, *c
 	return c1.a == c2.a || c1.a == c2.b || c1.b == c2.a || c1.b == c2.b
 }
@@ -31,11 +32,11 @@ func nameStartingWith(network []connections, c string) int {
 		}
 	}
 	// each triangle is two times in the list so the result is divided by two
-	return counter /  2
+	return counter / 2
 }
 
-func (connections *connections) add(c *connection){
-	(*connections)[*c] = struct{}{}	
+func (connections *connections) add(c *connection) {
+	(*connections)[*c] = struct{}{}
 }
 
 func (connections *connections) contains_same_endpoint(c *connection) []*connection {

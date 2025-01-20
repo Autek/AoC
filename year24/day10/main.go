@@ -9,28 +9,28 @@ import (
 
 type queue[T any] []T
 
-func (q * queue[T]) enqueue(value T) {
+func (q *queue[T]) enqueue(value T) {
 	*q = append(*q, value)
 }
 
-func (q * queue[T]) dequeue() T {
-    front := (*q)[0]
-    *q = (*q)[1:]
-    return front
+func (q *queue[T]) dequeue() T {
+	front := (*q)[0]
+	*q = (*q)[1:]
+	return front
 }
 
 func (q queue[T]) isEmpty() bool {
-    return len(q) == 0
+	return len(q) == 0
 }
 
 type graph[T any] [][]vertex[T]
 
 type vertex[T any] struct {
-	val T
+	val     T
 	reached bool
 }
 
-func (g graph[T])adjacentEdges(indices []int)[][]int {
+func (g graph[T]) adjacentEdges(indices []int) [][]int {
 	maxI := len(g)
 	maxJ := len(g[0])
 	steps := [][]int{{1, 0}, {0, 1}, {-1, 0}, {0, -1}}
@@ -38,8 +38,8 @@ func (g graph[T])adjacentEdges(indices []int)[][]int {
 	for _, step := range steps {
 		edgeI := indices[0] + step[0]
 		edgeJ := indices[1] + step[1]
-		
-		if (edgeI >= 0 && edgeI < maxI && edgeJ >= 0 && edgeJ < maxJ) {
+
+		if edgeI >= 0 && edgeI < maxI && edgeJ >= 0 && edgeJ < maxJ {
 			adjacent = append(adjacent, []int{edgeI, edgeJ})
 		}
 	}
@@ -83,7 +83,7 @@ func score(g graph[int], i, j int) int {
 		u := q.dequeue()
 		for _, indexes := range g.adjacentEdges(u) {
 			if !g[indexes[0]][indexes[1]].reached {
-				if g[u[0]][u[1]].val + 1 == g[indexes[0]][indexes[1]].val {
+				if g[u[0]][u[1]].val+1 == g[indexes[0]][indexes[1]].val {
 					g[indexes[0]][indexes[1]].reached = true
 					if g[indexes[0]][indexes[1]].val == 9 {
 						summits++
@@ -117,7 +117,7 @@ func rating(g graph[int], i, j int) int {
 	for !q.isEmpty() {
 		u := q.dequeue()
 		for _, n := range g.adjacentEdges(u) {
-			if g[u[0]][u[1]].val + 1 == g[n[0]][n[1]].val {
+			if g[u[0]][u[1]].val+1 == g[n[0]][n[1]].val {
 				if g[n[0]][n[1]].val == 9 {
 					rating++
 				} else {

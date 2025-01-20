@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const(
+const (
 	empty = iota
 	box
 	wall
@@ -19,12 +19,12 @@ type vec struct {
 	x, y int
 }
 
-func (v1 * vec)add(v2 vec) {
+func (v1 *vec) add(v2 vec) {
 	v1.x += v2.x
 	v1.y += v2.y
 }
 
-func (v1 * vec)sub(v2 vec) {
+func (v1 *vec) sub(v2 vec) {
 	v1.x -= v2.x
 	v1.y -= v2.y
 }
@@ -36,10 +36,10 @@ func parse(fileName string) ([][]cell, []rune) {
 	}
 
 	warehouseStr, movesStr, _ := strings.Cut(string(file), "\n\n")
-	
+
 	lines := strings.Split(strings.TrimSpace(warehouseStr), "\n")
 	wareHouse := make([][]cell, len(lines))
-	for i, line := range(lines) {
+	for i, line := range lines {
 		row := make([]cell, len(line))
 		for j, r := range line {
 			if r == '#' {
@@ -54,7 +54,7 @@ func parse(fileName string) ([][]cell, []rune) {
 		}
 		wareHouse[i] = row
 	}
-	
+
 	moves := make([]rune, 0, len(movesStr))
 	for _, r := range movesStr {
 		if r != '\n' {
@@ -107,7 +107,7 @@ func sumGPS(wareHouse [][]cell) int {
 	for i := range wareHouse {
 		for j := range wareHouse[i] {
 			if wareHouse[i][j] == box {
-				sum += i * 100 + j
+				sum += i*100 + j
 			}
 		}
 	}
@@ -126,12 +126,12 @@ func sol1() {
 
 type cell2 struct {
 	isSimple bool
-	simple cell
-	box *cell2
+	simple   cell
+	box      *cell2
 }
 
 type Node[T any] struct {
-	val T
+	val         T
 	left, right *Node[T]
 }
 
@@ -142,30 +142,30 @@ func parse2(fileName string) ([][]cell2, []rune) {
 	}
 
 	warehouseStr, movesStr, _ := strings.Cut(string(file), "\n\n")
-	
+
 	lines := strings.Split(strings.TrimSpace(warehouseStr), "\n")
 	wareHouse := make([][]cell2, len(lines))
-	for i, line := range(lines) {
-		row := make([]cell2, len(line) * 2)
+	for i, line := range lines {
+		row := make([]cell2, len(line)*2)
 		for j, r := range line {
 			if r == '#' {
 				row[j*2] = cell2{isSimple: true, simple: wall}
-				row[j*2 + 1] = cell2{isSimple: true, simple: wall}
+				row[j*2+1] = cell2{isSimple: true, simple: wall}
 			} else if r == '@' {
 				row[j*2] = cell2{isSimple: true, simple: robot}
-				row[j*2 + 1] = cell2{isSimple: true, simple: empty}
+				row[j*2+1] = cell2{isSimple: true, simple: empty}
 			} else if r == 'O' {
 				row[j*2] = cell2{isSimple: false}
-				row[j*2 + 1] = cell2{isSimple: false, box: &row[j*2]}
-				row[j*2].box = &row[j*2 + 1]
+				row[j*2+1] = cell2{isSimple: false, box: &row[j*2]}
+				row[j*2].box = &row[j*2+1]
 			} else {
 				row[j*2] = cell2{isSimple: true, simple: empty}
-				row[j*2 + 1] = cell2{isSimple: true, simple: empty}
+				row[j*2+1] = cell2{isSimple: true, simple: empty}
 			}
 		}
 		wareHouse[i] = row
 	}
-	
+
 	moves := make([]rune, 0, len(movesStr))
 	for _, r := range movesStr {
 		if r != '\n' {
@@ -192,7 +192,7 @@ func sumGPS2(wareHouse [][]cell2) int {
 	for i := range wareHouse {
 		for j := 0; j < len(wareHouse[i]); j++ {
 			if !wareHouse[i][j].isSimple {
-				sum += i * 100 + j
+				sum += i*100 + j
 				j++
 			}
 		}
@@ -216,7 +216,7 @@ func getMoves(wareHouse [][]cell2, pos vec, move vec) (bool, *Node[vec]) {
 	canMove, moves := getMoves(wareHouse, nextPos, move)
 	root.left = moves
 
-	// if the movement is horizontal, the other part of the box is getting 
+	// if the movement is horizontal, the other part of the box is getting
 	// moved by pushing, no need to move it by "linking"
 	if move.y == 0 {
 		return canMove, &root
@@ -224,13 +224,13 @@ func getMoves(wareHouse [][]cell2, pos vec, move vec) (bool, *Node[vec]) {
 
 	// nextPos will be the other part of the box, it is either to
 	// the left or right
-	if &wareHouse[nextPos.y][nextPos.x - 1] == nextCell.box {
+	if &wareHouse[nextPos.y][nextPos.x-1] == nextCell.box {
 		nextPos.sub(vec{1, 0})
 	} else {
 		nextPos.add(vec{1, 0})
 	}
 
-	canMove2, moves2 := getMoves(wareHouse, nextPos, move)	
+	canMove2, moves2 := getMoves(wareHouse, nextPos, move)
 	root.right = moves2
 
 	return canMove && canMove2, &root
@@ -244,14 +244,14 @@ func performMoves(wareHouse [][]cell2, toMove *Node[vec], move vec) {
 		performMoves(wareHouse, toMove.right, move)
 	}
 	pos := toMove.val
-	wareHouse[pos.y + move.y][pos.x + move.x] = wareHouse[pos.y][pos.x]
+	wareHouse[pos.y+move.y][pos.x+move.x] = wareHouse[pos.y][pos.x]
 	if !wareHouse[pos.y][pos.x].isSimple {
-		wareHouse[pos.y + move.y][pos.x + move.x].box.box = &wareHouse[pos.y + move.y][pos.x + move.x]
+		wareHouse[pos.y+move.y][pos.x+move.x].box.box = &wareHouse[pos.y+move.y][pos.x+move.x]
 	}
 	wareHouse[pos.y][pos.x] = cell2{isSimple: true, simple: empty}
 }
 
-// remove duplicates from the moves, could probably 
+// remove duplicates from the moves, could probably
 // be replaced by a visited set in getMoves
 func removeDuplicates(moves *Node[vec]) {
 	reached := map[vec]struct{}{}
@@ -351,7 +351,7 @@ func testGrid(w [][]cell2) bool {
 
 func printMoves(m Node[vec]) {
 	moves := []Node[vec]{m}
-	for i := 0; len(moves) != 0; i++{
+	for i := 0; len(moves) != 0; i++ {
 		fmt.Println("level", i)
 		str := ""
 		newMoves := []Node[vec]{}

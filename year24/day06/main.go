@@ -26,7 +26,7 @@ func parse(fileName string) [][]cell {
 				row[j] = cell{false, false}
 			} else if char == "#" {
 				row[j] = cell{false, true}
-			} else if char == "^"{
+			} else if char == "^" {
 				row[j] = cell{true, false}
 			}
 		}
@@ -35,7 +35,7 @@ func parse(fileName string) [][]cell {
 	return grid
 }
 
-func findPlayer(grid [][]cell)(int, int) {
+func findPlayer(grid [][]cell) (int, int) {
 	for i, row := range grid {
 		for j, c := range row {
 			if c.isReached {
@@ -50,25 +50,25 @@ func isInBounds(grid [][]cell, i int, j int) bool {
 	return i >= 0 && i < len(grid) && j >= 0 && j < len(grid[0])
 }
 
-func runSimulation(grid [][]cell) [][]cell{
+func runSimulation(grid [][]cell) [][]cell {
 	directions := []direction{direction{-1, 0},
-								direction{0, 1}, 
-								direction{1, 0}, 
-								direction{0, -1}}
+		direction{0, 1},
+		direction{1, 0},
+		direction{0, -1}}
 	i, j := findPlayer(grid)
 	lastI, lastJ := -1, -1
 	directionIndex := 0
 	for true {
 		lastI = i
 		lastJ = j
-		i += directions[directionIndex % len(directions)].i
-		j += directions[directionIndex % len(directions)].j
+		i += directions[directionIndex%len(directions)].i
+		j += directions[directionIndex%len(directions)].j
 		for isInBounds(grid, i, j) && grid[i][j].isObstacle {
 			directionIndex++
-			i = lastI + directions[directionIndex % len(directions)].i
-			j = lastJ + directions[directionIndex % len(directions)].j
+			i = lastI + directions[directionIndex%len(directions)].i
+			j = lastJ + directions[directionIndex%len(directions)].j
 		}
-		if !isInBounds(grid, i, j){
+		if !isInBounds(grid, i, j) {
 			break
 		}
 		grid[i][j].isReached = true
@@ -76,7 +76,7 @@ func runSimulation(grid [][]cell) [][]cell{
 	return grid
 }
 
-func countReached(grid [][]cell) int{
+func countReached(grid [][]cell) int {
 	sum := 0
 	for _, row := range grid {
 		for _, c := range row {
@@ -88,15 +88,15 @@ func countReached(grid [][]cell) int{
 	return sum
 }
 
-func printGrid(grid [][]cell){
+func printGrid(grid [][]cell) {
 	str := ""
 	for _, row := range grid {
 		for _, c := range row {
 			if c.isReached {
 				str += "X"
-			}else if c.isObstacle {
+			} else if c.isObstacle {
 				str += "#"
-			}else {
+			} else {
 				str += "."
 			}
 
@@ -106,10 +106,10 @@ func printGrid(grid [][]cell){
 	fmt.Print(str)
 }
 
-//the first way I can see to do this is to build a 2D slice of custom type cell
-//then we run the simulation on the array and we just count the cells reached
-//this should run in O(number of cells) which seems reasonable
-func sol1(){
+// the first way I can see to do this is to build a 2D slice of custom type cell
+// then we run the simulation on the array and we just count the cells reached
+// this should run in O(number of cells) which seems reasonable
+func sol1() {
 	grid := parse("input.txt")
 	grid = runSimulation(grid)
 	reached := countReached(grid)
@@ -122,7 +122,7 @@ type direction struct {
 
 type cell2 struct {
 	isReached, isObstacle bool
-	dir direction
+	dir                   direction
 }
 
 func parse2(fileName string) [][]cell2 {
@@ -141,7 +141,7 @@ func parse2(fileName string) [][]cell2 {
 				row[j] = cell2{false, false, direction{}}
 			} else if char == "#" {
 				row[j] = cell2{false, true, direction{}}
-			} else if char == "^"{
+			} else if char == "^" {
 				row[j] = cell2{true, false, direction{-1, 0}}
 			}
 		}
@@ -150,7 +150,7 @@ func parse2(fileName string) [][]cell2 {
 	return grid
 }
 
-func findPlayer2(grid [][]cell2)(int, int) {
+func findPlayer2(grid [][]cell2) (int, int) {
 	for i, row := range grid {
 		for j, c := range row {
 			if c.isReached {
@@ -165,44 +165,44 @@ func isInBounds2(grid [][]cell2, i int, j int) bool {
 	return i >= 0 && i < len(grid) && j >= 0 && j < len(grid[0])
 }
 
-func checkLoop(grid [][]cell2) bool{
+func checkLoop(grid [][]cell2) bool {
 	directions := []direction{direction{-1, 0},
-								direction{0, 1}, 
-								direction{1, 0}, 
-								direction{0, -1}}
+		direction{0, 1},
+		direction{1, 0},
+		direction{0, -1}}
 	i, j := findPlayer2(grid)
 	lastI, lastJ := -1, -1
 	directionIndex := 0
 	for isInBounds2(grid, i, j) {
 		lastI = i
 		lastJ = j
-		i += directions[directionIndex % len(directions)].i
-		j += directions[directionIndex % len(directions)].j
+		i += directions[directionIndex%len(directions)].i
+		j += directions[directionIndex%len(directions)].j
 		for isInBounds2(grid, i, j) && grid[i][j].isObstacle {
 			directionIndex++
-			i = lastI + directions[directionIndex % len(directions)].i
-			j = lastJ + directions[directionIndex % len(directions)].j
+			i = lastI + directions[directionIndex%len(directions)].i
+			j = lastJ + directions[directionIndex%len(directions)].j
 		}
-		if isInBounds2(grid, i, j){
-			if grid[i][j].isReached && grid[i][j].dir == directions[directionIndex % len(directions)] {
+		if isInBounds2(grid, i, j) {
+			if grid[i][j].isReached && grid[i][j].dir == directions[directionIndex%len(directions)] {
 				return true
 			}
 			grid[i][j].isReached = true
-			grid[i][j].dir = directions[directionIndex % len(directions)]
+			grid[i][j].dir = directions[directionIndex%len(directions)]
 		}
 	}
 	return false
 }
 
-func printGrid2(grid [][]cell2){
+func printGrid2(grid [][]cell2) {
 	str := ""
 	for _, row := range grid {
 		for _, c := range row {
 			if c.isReached {
 				str += "X"
-			}else if c.isObstacle {
+			} else if c.isObstacle {
 				str += "#"
-			}else {
+			} else {
 				str += "."
 			}
 
@@ -212,7 +212,7 @@ func printGrid2(grid [][]cell2){
 	fmt.Print(str)
 }
 
-func copyGrid(grid [][]cell2) [][]cell2{
+func copyGrid(grid [][]cell2) [][]cell2 {
 	newGrid := make([][]cell2, len(grid))
 	for i, row := range grid {
 		newGrid[i] = make([]cell2, len(row))
@@ -221,11 +221,11 @@ func copyGrid(grid [][]cell2) [][]cell2{
 	return newGrid
 }
 
-//to do this part for now I can think of doing it in a bruteForce manner
-//let's check if there is a loop after adding an obstacle to every Point
-//in the grid (this can be optimised to put an obstacle on the points reached
-//but the complexity would stay the same so let's do it the dirty way)
-func sol2(){
+// to do this part for now I can think of doing it in a bruteForce manner
+// let's check if there is a loop after adding an obstacle to every Point
+// in the grid (this can be optimised to put an obstacle on the points reached
+// but the complexity would stay the same so let's do it the dirty way)
+func sol2() {
 	grid := parse2("input.txt")
 	sum := 0
 	for i, row := range grid {

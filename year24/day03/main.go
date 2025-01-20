@@ -1,7 +1,6 @@
 // this puzzle seems to be typical use case for a regex so let's try to use
 // regex in go !
 
-
 package main
 
 import (
@@ -11,20 +10,19 @@ import (
 	"strconv"
 )
 
-
-func filterInput(input string) []string{
+func filterInput(input string) []string {
 	regex := regexp.MustCompile(`(mul\([0-9]{1,3},[0-9]{1,3}\))`)
 	return regex.FindAllString(input, -1)
 }
 
-func evaluateMul(input string) int{
+func evaluateMul(input string) int {
 	regex := regexp.MustCompile(`([0-9]{1,3})`)
 	numbers_str := regex.FindAllString(input, 2)
-	nb1, err := strconv.Atoi(numbers_str[0]) 
+	nb1, err := strconv.Atoi(numbers_str[0])
 	if err != nil {
 		panic(err)
 	}
-	nb2, err := strconv.Atoi(numbers_str[1]) 
+	nb2, err := strconv.Atoi(numbers_str[1])
 	if err != nil {
 		panic(err)
 	}
@@ -44,7 +42,7 @@ func sol1() {
 	fmt.Println(sum)
 }
 
-func filterInput2(input string) []string{
+func filterInput2(input string) []string {
 	regex := regexp.MustCompile(`(mul\([0-9]{1,3},[0-9]{1,3}\))|(don't)|(do)`)
 	return regex.FindAllString(input, -1)
 }

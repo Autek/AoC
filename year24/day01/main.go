@@ -37,7 +37,7 @@ func parseInput(fileName string) ([]int, []int) {
 }
 
 func transform[T1 any, T2 any](l1 []T1, f func(T1) T2) []T2 {
-	l2 := make([]T2, len(l1)) 
+	l2 := make([]T2, len(l1))
 	for i, val := range l1 {
 		l2[i] = f(val)
 	}
@@ -57,7 +57,7 @@ func filter[T any](l1 []T, f func(T) bool) []T {
 func mergeSort(l []int) []int {
 	merge := func(l1 []int, l2 []int) []int {
 		i, j := 0, 0
-		l3 := make([]int, 0, len(l1) + len(l2))
+		l3 := make([]int, 0, len(l1)+len(l2))
 		for i < len(l1) || j < len(l2) {
 			if i >= len(l1) {
 				l3 = append(l3, l2[j])
@@ -75,7 +75,7 @@ func mergeSort(l []int) []int {
 		}
 		return l3
 	}
-	base := transform(l, func(e int) []int {return []int{e}}) 
+	base := transform(l, func(e int) []int { return []int{e} })
 	for len(base) != 1 {
 		for i := 0; i < len(base); i += 2 {
 			a1 := base[i]
@@ -87,7 +87,7 @@ func mergeSort(l []int) []int {
 			}
 			base[i/2] = merge(a1, a2)
 		}
-		base = base[:(len(base) + 1) / 2]
+		base = base[:(len(base)+1)/2]
 	}
 	return base[0]
 }
@@ -96,7 +96,7 @@ func zip[T any](l1 []T, l2 []T) [][]T {
 	if len(l1) != len(l2) {
 		panic("l1 and l2 have different length")
 	}
-	l3 := make([][]T, len(l1)) 
+	l3 := make([][]T, len(l1))
 	for i := range l3 {
 		l3[i] = []T{l1[i], l2[i]}
 	}
@@ -106,7 +106,7 @@ func zip[T any](l1 []T, l2 []T) [][]T {
 func abs(nb int) int {
 	if nb < 0 {
 		return -nb
-	} 
+	}
 	return nb
 }
 
@@ -118,26 +118,26 @@ func foldLeft[T any, I any](l []T, init I, f func(T, I) I) I {
 	return acc
 }
 
-func group[T comparable](l []T) map[T]int{
-	f := func(e T, m map[T]int) map[T]int{ 
+func group[T comparable](l []T) map[T]int {
+	f := func(e T, m map[T]int) map[T]int {
 		m[e]++
 		return m
 	}
 	return foldLeft(l, map[T]int{}, f)
 }
 
-func sol1(){
+func sol1() {
 	l1, l2 := parseInput("input.txt")
 	l1 = mergeSort(l1)
 	l2 = mergeSort(l2)
 	l3 := zip(l1, l2)
-	l4 := transform(l3, func(tuple []int) int {return tuple[0] - tuple[1]})
+	l4 := transform(l3, func(tuple []int) int { return tuple[0] - tuple[1] })
 	l5 := transform(l4, abs)
-	result := foldLeft(l5, 0, func(a int, b int) int {return a + b})
+	result := foldLeft(l5, 0, func(a int, b int) int { return a + b })
 	fmt.Println(result)
 }
 
-func sol2(){
+func sol2() {
 	l1, l2 := parseInput("input.txt")
 	group1 := group(l1)
 	group2 := group(l2)
@@ -147,7 +147,6 @@ func sol2(){
 	}
 	fmt.Println(sum)
 }
-
 
 func main() {
 	sol2()

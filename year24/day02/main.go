@@ -31,19 +31,19 @@ func parseInput(fileName string) [][]int {
 	return reports
 }
 
-func isSafe(report []int) bool{
+func isSafe(report []int) bool {
 	if len(report) < 2 {
 		panic("report is too small")
 	}
 
 	lastDelta := 0
-	for i := range report[:len(report) -1] {
+	for i := range report[:len(report)-1] {
 		delta := report[i] - report[i+1]
 		abs_delta := int(math.Abs(float64(delta)))
 		if abs_delta < 1 || abs_delta > 3 {
 			return false
 		}
-		if lastDelta * delta < 0 {
+		if lastDelta*delta < 0 {
 			return false
 		}
 		lastDelta = delta
@@ -51,11 +51,11 @@ func isSafe(report []int) bool{
 	return true
 }
 
-func sol1(){
+func sol1() {
 	reports := parseInput("input.txt")
 	nbSafeReports := 0
-	for _, report := range reports{
-		if (isSafe(report)) {
+	for _, report := range reports {
+		if isSafe(report) {
 			nbSafeReports++
 		}
 	}
@@ -64,14 +64,14 @@ func sol1(){
 
 // this can probably be better implemented but as a quick and dirty way to do it
 // let's just remove all the samples one by one (and also without removing)
-func isSafeDampener(report []int) bool{
+func isSafeDampener(report []int) bool {
 	if len(report) < 2 {
 		panic("report is too small")
 	}
 	if isSafe(report) {
 		return true
 	}
-	tempReport := make([]int, 0, len(report) -1)
+	tempReport := make([]int, 0, len(report)-1)
 	for i := range report {
 		tempReport = tempReport[:0]
 		tempReport = append(tempReport, report[:i]...)
@@ -83,11 +83,11 @@ func isSafeDampener(report []int) bool{
 	return false
 }
 
-func sol2(){
+func sol2() {
 	reports := parseInput("input.txt")
 	nbSafeReports := 0
-	for _, report := range reports{
-		if (isSafeDampener(report)) {
+	for _, report := range reports {
+		if isSafeDampener(report) {
 			nbSafeReports++
 		}
 	}

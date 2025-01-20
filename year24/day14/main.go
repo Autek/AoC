@@ -17,11 +17,11 @@ type robot struct {
 }
 
 func parse(fileName string) []robot {
-	file, err := os.ReadFile(fileName) 
+	file, err := os.ReadFile(fileName)
 	if err != nil {
 		panic(err)
 	}
-	
+
 	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
 	robots := make([]robot, len(lines))
 	for i, line := range lines {
@@ -37,31 +37,31 @@ func posAfterN(r *robot, seconds, maxX, maxY int) {
 	// we use (a % b + b) % b to compute the modulo and stay positive
 	modX := maxX + 1
 	modY := maxY + 1
-	r.pos.x = ((r.speed.x * seconds + r.pos.x) % modX + modX) % modX
-	r.pos.y = ((r.speed.y * seconds + r.pos.y) % modY + modY) % modY
+	r.pos.x = ((r.speed.x*seconds+r.pos.x)%modX + modX) % modX
+	r.pos.y = ((r.speed.y*seconds+r.pos.y)%modY + modY) % modY
 }
 
 func computeSafetyFactor(robots []robot, maxX, maxY int) int {
 	topLeft, topRight, botLeft, botRight := 0, 0, 0, 0
 	for _, r := range robots {
-		if r.pos.x < (maxX + 1) / 2 && r.pos.y < (maxY + 1) / 2 {
+		if r.pos.x < (maxX+1)/2 && r.pos.y < (maxY+1)/2 {
 			topLeft++
-		} else if r.pos.x > maxX / 2 && r.pos.y < (maxY + 1) / 2 {
+		} else if r.pos.x > maxX/2 && r.pos.y < (maxY+1)/2 {
 			topRight++
-		} else if r.pos.x < (maxX + 1) / 2 && r.pos.y > maxY / 2 {
+		} else if r.pos.x < (maxX+1)/2 && r.pos.y > maxY/2 {
 			botLeft++
-		} else if r.pos.x > maxX / 2 && r.pos.y > maxY / 2 {
+		} else if r.pos.x > maxX/2 && r.pos.y > maxY/2 {
 			botRight++
 		}
 
 	}
-	return  topLeft * topRight * botLeft * botRight
+	return topLeft * topRight * botLeft * botRight
 }
 
 func printRobots(robots []robot, maxX, maxY int) {
-	grid := make([][]int, maxY + 1)
+	grid := make([][]int, maxY+1)
 	for i := range grid {
-		grid[i] = make([]int, maxX + 1)
+		grid[i] = make([]int, maxX+1)
 	}
 
 	for _, r := range robots {
@@ -106,11 +106,11 @@ func sol2() {
 	}
 	printRobots(robots, maxX, maxY)
 	time.Sleep(time.Second)
-	for i := 1; ; i++{
+	for i := 1; ; i++ {
 		for i := range robots {
 			posAfterN(&robots[i], pseudoPeriod, maxX, maxY)
 		}
-		fmt.Println("seconds:", i * pseudoPeriod + firstPseudoPattern)
+		fmt.Println("seconds:", i*pseudoPeriod+firstPseudoPattern)
 		printRobots(robots, maxX, maxY)
 		time.Sleep(time.Second)
 	}

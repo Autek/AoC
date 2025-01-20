@@ -9,7 +9,7 @@ import (
 )
 
 type eq struct {
-	result int
+	result  int
 	numbers []int
 }
 
@@ -50,7 +50,7 @@ func isValid(e eq) bool {
 		if len(n) == 0 || acc > e.result {
 			return false
 		}
-		return rec(n[1:], acc + n[0]) || rec(n[1:], acc * n[0])
+		return rec(n[1:], acc+n[0]) || rec(n[1:], acc*n[0])
 	}
 	return rec(e.numbers[1:], e.numbers[0])
 }
@@ -68,7 +68,7 @@ func sol1() {
 
 func concat(a, b int) int {
 	digits := int(math.Log10(float64(b))) + 1
-	return a * int(math.Pow(10, float64(digits))) + b
+	return a*int(math.Pow(10, float64(digits))) + b
 }
 
 func isValid2(e eq) bool {
@@ -80,7 +80,7 @@ func isValid2(e eq) bool {
 		if len(n) == 0 || acc > e.result {
 			return false
 		}
-		return rec(n[1:], acc + n[0]) || rec(n[1:], acc * n[0]) || rec(n[1:], concat(acc, n[0]))
+		return rec(n[1:], acc+n[0]) || rec(n[1:], acc*n[0]) || rec(n[1:], concat(acc, n[0]))
 	}
 	return rec(e.numbers[1:], e.numbers[0])
 }

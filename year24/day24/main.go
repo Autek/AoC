@@ -9,7 +9,7 @@ import (
 
 type logic int
 
-const(
+const (
 	OR = iota
 	AND
 	XOR
@@ -17,16 +17,20 @@ const(
 
 func GetlogicFromStr(name string) logic {
 	switch name {
-	case "OR": return OR
-	case "AND": return AND
-	case "XOR": return XOR
-	default: panic("name not found \"" + name + "\"")
+	case "OR":
+		return OR
+	case "AND":
+		return AND
+	case "XOR":
+		return XOR
+	default:
+		panic("name not found \"" + name + "\"")
 	}
 }
 
 type wireValue int
 
-const(
+const (
 	ONE = iota
 	ZERO
 	UNDEFINED
@@ -34,23 +38,26 @@ const(
 
 func GetWireValueFromStr(name string) wireValue {
 	switch name {
-	case "1": return ONE
-	case "0": return ZERO
-	default: panic("name not found \"" + name + "\"")
+	case "1":
+		return ONE
+	case "0":
+		return ZERO
+	default:
+		panic("name not found \"" + name + "\"")
 	}
 }
 
-type wire struct{
+type wire struct {
 	name string
-	val wireValue
+	val  wireValue
 }
 
-type gate struct{
+type gate struct {
 	left, right, output *wire
 	logic
 }
 
-func getWireFromName(name string, wires []wire) *wire{
+func getWireFromName(name string, wires []wire) *wire {
 	for _, w := range wires {
 		if w.name == name {
 			return &w
@@ -68,7 +75,7 @@ func getOrCreateWire(key string, wires map[string]*wire) *wire {
 	return newWire
 }
 
-func parseInput(fileName string) ([]gate, map[string]*wire){
+func parseInput(fileName string) ([]gate, map[string]*wire) {
 	file, err := os.ReadFile(fileName)
 	if err != nil {
 		panic(err)
@@ -76,25 +83,25 @@ func parseInput(fileName string) ([]gate, map[string]*wire){
 	file_str := strings.TrimSpace(string(file))
 	split_file_str := strings.Split(file_str, "\n\n")
 
-	if (len(split_file_str) != 2) {
+	if len(split_file_str) != 2 {
 		panic("the file was not split in 2")
 	}
 	wires_str := strings.TrimSpace(split_file_str[0])
 	gates_str := strings.TrimSpace(split_file_str[1])
 	wires_slice := strings.Split(wires_str, "\n")
 	gates_slice := strings.Split(gates_str, "\n")
-	
+
 	wires := make(map[string]*wire, 0)
 	gates := make([]gate, 0)
 	for _, g := range gates_slice {
 		gateSlice := strings.Split(g, " -> ")
-		if (len(gateSlice) != 2) {
+		if len(gateSlice) != 2 {
 			panic("couldn't split gate in two")
 		}
 		inputsAndLogic := strings.TrimSpace(gateSlice[0])
 		outputStr := strings.TrimSpace(gateSlice[1])
 		inputsAndLogicSlice := strings.Split(inputsAndLogic, " ")
-		if (len(inputsAndLogicSlice) != 3) {
+		if len(inputsAndLogicSlice) != 3 {
 			panic("couldn't split gate input in three")
 		}
 		leftStr := strings.TrimSpace(inputsAndLogicSlice[0])
@@ -111,7 +118,7 @@ func parseInput(fileName string) ([]gate, map[string]*wire){
 
 	for _, w := range wires_slice {
 		wireSlice := strings.Split(w, ": ")
-		if (len(wireSlice) != 2) {
+		if len(wireSlice) != 2 {
 			panic("couldn't split wire in two")
 		}
 		wireName := strings.TrimSpace(wireSlice[0])
@@ -123,9 +130,9 @@ func parseInput(fileName string) ([]gate, map[string]*wire){
 	return gates, wires
 }
 
-func update (gates []gate) {
+func update(gates []gate) {
 	finished := false
-	for !finished{
+	for !finished {
 		finished = true
 		for _, g := range gates {
 			if updateGate(&g) {
@@ -135,7 +142,7 @@ func update (gates []gate) {
 	}
 }
 
-func updateGate(g *gate) bool{
+func updateGate(g *gate) bool {
 	if g == nil {
 		panic("recieved nil pointer")
 	}
@@ -145,27 +152,30 @@ func updateGate(g *gate) bool{
 	if g.right == nil {
 		panic("right is nil")
 	}
-	if g.left.val != UNDEFINED && 
-	g.right.val != UNDEFINED && 
-	g.output.val == UNDEFINED {
+	if g.left.val != UNDEFINED &&
+		g.right.val != UNDEFINED &&
+		g.output.val == UNDEFINED {
 		switch g.logic {
-			case AND: {
+		case AND:
+			{
 				if g.left.val == ONE && g.right.val == ONE {
-					g.output.val = ONE 
+					g.output.val = ONE
 				} else {
 					g.output.val = ZERO
 				}
 			}
-			case OR: {
+		case OR:
+			{
 				if g.left.val == ONE || g.right.val == ONE {
-					g.output.val = ONE 
+					g.output.val = ONE
 				} else {
 					g.output.val = ZERO
 				}
 			}
-			case XOR: {
+		case XOR:
+			{
 				if g.left.val != g.right.val {
-					g.output.val = ONE 
+					g.output.val = ONE
 				} else {
 					g.output.val = ZERO
 				}
@@ -195,7 +205,6 @@ func createOutput(wires map[string]*wire) int {
 	return output
 }
 
-
 func sol1() {
 	gates, wires := parseInput("input.txt")
 	update(gates)
@@ -205,7 +214,7 @@ func sol1() {
 
 //let's try a greedy implementation
 
-func hammingDistance(a int, b int) int{
+func hammingDistance(a int, b int) int {
 	nbDifferentBits := 0
 	for different := a ^ b; different > 0; different >>= 1 {
 		nbDifferentBits += different & 1
@@ -229,7 +238,7 @@ func wireToInt(wires map[string]*wire, wirePrefix string) (int, bool) {
 			}
 		}
 	}
-	return output,  false
+	return output, false
 }
 
 func sol2() {
@@ -251,7 +260,7 @@ func copyWires(a map[string]*wire, b map[string]*wire) {
 	}
 }
 
-func bestChange() (*gate, *gate, int){
+func bestChange() (*gate, *gate, int) {
 	var gate1, gate2 *gate
 	bestDist := 64
 	bestOutput := 0
@@ -260,7 +269,7 @@ func bestChange() (*gate, *gate, int){
 	y, _ := wireToInt(wires, "y")
 	expectedZ := x + y
 
-	initialWires := make(map[string]*wire, 0) 
+	initialWires := make(map[string]*wire, 0)
 	for key, val := range wires {
 		cp := *val
 		initialWires[key] = &cp

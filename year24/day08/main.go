@@ -12,7 +12,7 @@ type position struct {
 
 type antenna struct {
 	name string
-	pos []position
+	pos  []position
 }
 
 func getAntena(antennaName string, antennas []antenna) *antenna {
@@ -36,7 +36,7 @@ func parse(fileName string) ([]antenna, position) {
 		chars := strings.Split(strings.TrimSpace(line), "")
 		for j, char := range chars {
 			if char == "." {
-				continue 
+				continue
 			}
 			a := getAntena(char, antennas)
 			pos := position{x: j, y: i}
@@ -52,7 +52,7 @@ func parse(fileName string) ([]antenna, position) {
 	return antennas, maxPos
 }
 
-func getAntiNodes(a antenna) map[position]struct{}{
+func getAntiNodes(a antenna) map[position]struct{} {
 	positions := map[position]struct{}{}
 	for i, p1 := range a.pos[:len(a.pos)-1] {
 		for _, p2 := range a.pos[i+1:] {
@@ -62,7 +62,7 @@ func getAntiNodes(a antenna) map[position]struct{}{
 			positions[a1] = struct{}{}
 			positions[a2] = struct{}{}
 		}
-		
+
 	}
 	return positions
 }
@@ -95,7 +95,7 @@ func sol1() {
 	fmt.Println(len(antiNodes))
 }
 
-func getAntiNodes2(a antenna, maxPos position) map[position]struct{}{
+func getAntiNodes2(a antenna, maxPos position) map[position]struct{} {
 	positions := map[position]struct{}{}
 	for i, p1 := range a.pos[:len(a.pos)-1] {
 		for _, p2 := range a.pos[i+1:] {

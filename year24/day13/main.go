@@ -15,11 +15,11 @@ type matrix struct {
 	a, b, c, d float64
 }
 
-func (m *matrix)inverse() matrix {
-	det := m.a * m.d - m.b * m.c    
+func (m *matrix) inverse() matrix {
+	det := m.a*m.d - m.b*m.c
 	if math.Abs(det) < 1e-9 {
-        panic("Matrix is singular or nearly singular")
-    }
+		panic("Matrix is singular or nearly singular")
+	}
 
 	a := m.d / det
 	b := -m.b / det
@@ -29,8 +29,8 @@ func (m *matrix)inverse() matrix {
 }
 
 func matXVec(m *matrix, v *vec) vec {
-	a := m.a * v.a + m.b * v.b
-	b := m.c * v.a + m.d * v.b
+	a := m.a*v.a + m.b*v.b
+	b := m.c*v.a + m.d*v.b
 	return vec{a, b}
 }
 
@@ -39,7 +39,7 @@ func matFromVec(v1, v2 *vec) matrix {
 }
 
 func parse(filename string) ([]vec, []vec, []vec) {
-	file, err := os.ReadFile(filename) 
+	file, err := os.ReadFile(filename)
 	if err != nil {
 		panic(err)
 	}
@@ -59,13 +59,13 @@ func parse(filename string) ([]vec, []vec, []vec) {
 }
 
 func closeToInt(val, threshold float64) (int, bool) {
-	if (math.Abs(math.Round(val) - val) < threshold) {
+	if math.Abs(math.Round(val)-val) < threshold {
 		return int(math.Round(val)), true
 	}
-	return -1.0, false 
+	return -1.0, false
 }
 
-// computes the change of basis from the custom basis v1, v2 to the 
+// computes the change of basis from the custom basis v1, v2 to the
 // cannonical basis
 func computePresses(v1, v2, goal vec) (int, int, bool) {
 	mat := matFromVec(&v1, &v2)
@@ -78,7 +78,7 @@ func computePresses(v1, v2, goal vec) (int, int, bool) {
 		coeffA, isClose1 := closeToInt(coeffAFloat, threshold)
 		coeffB, isClose2 := closeToInt(coeffBFloat, threshold)
 		if isClose1 && isClose2 {
-			return coeffA, coeffB, true 
+			return coeffA, coeffB, true
 		}
 	}
 	return -1, -1, false

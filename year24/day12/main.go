@@ -44,11 +44,11 @@ func parse(fileName string) gardenMap {
 	return garden
 }
 
-func neighbours(i, j, maxI, maxJ int) []position{
+func neighbours(i, j, maxI, maxJ int) []position {
 	directions := []position{position{0, 1}, position{1, 0}, position{0, -1}, position{-1, 0}}
 	positions := make([]position, 0, len(directions))
 	for _, dir := range directions {
-		newI, newJ := i + dir.i, j + dir.j
+		newI, newJ := i+dir.i, j+dir.j
 		if newI >= 0 && newI <= maxI && newJ >= 0 && newJ <= maxJ {
 			positions = append(positions, position{newI, newJ})
 		}
@@ -65,13 +65,13 @@ func getRegions(garden gardenMap) []region {
 	var recRegion func(int, int) (perimeter, area int)
 	recRegion = func(i, j int) (perimeter, area int) {
 		reached[i][j] = true
-		nei := neighbours(i, j, len(garden) - 1, len(garden[0]) - 1)
+		nei := neighbours(i, j, len(garden)-1, len(garden[0])-1)
 		perimeter = 4 - len(nei)
 		area = 1
 		for _, n := range nei {
 			if garden[i][j] != garden[n.i][n.j] {
 				perimeter++
-			} else if !reached[n.i][n.j]{
+			} else if !reached[n.i][n.j] {
 				p, a := recRegion(n.i, n.j)
 				perimeter += p
 				area += a
@@ -80,9 +80,7 @@ func getRegions(garden gardenMap) []region {
 		return perimeter, area
 	}
 
-
-
-	regions := make([]region, 0, 1 << 10)
+	regions := make([]region, 0, 1<<10)
 	for i, line := range garden {
 		for j := range line {
 			if !reached[i][j] {
@@ -112,7 +110,7 @@ func countEdges(array [][]edge) int {
 		currentEdge := none
 		for j := range array[i] {
 			if array[i][j] != currentEdge {
-				if array[i][j] == horbot || array[i][j] == hortop{
+				if array[i][j] == horbot || array[i][j] == hortop {
 					sum++
 				}
 				currentEdge = array[i][j]
@@ -124,7 +122,7 @@ func countEdges(array [][]edge) int {
 		currentEdge := none
 		for j := range array {
 			if array[j][i] != currentEdge {
-				if array[j][i] == vertleft || array[j][i] == vertright{
+				if array[j][i] == vertleft || array[j][i] == vertright {
 					sum++
 				}
 				currentEdge = array[j][i]
@@ -135,12 +133,12 @@ func countEdges(array [][]edge) int {
 }
 
 func processEdges(array region2) ([][]edge, [][]edge) {
-	vertedges := make2DArray[edge](len(array), len(array[0]) + 1)
-	horedges := make2DArray[edge](len(array) + 1, len(array[0]))
+	vertedges := make2DArray[edge](len(array), len(array[0])+1)
+	horedges := make2DArray[edge](len(array)+1, len(array[0]))
 
 	vertKernel := func(i1, i2 bool) edge {
 		if i1 != i2 {
-			if (i2 == true) {
+			if i2 == true {
 				return vertleft
 			}
 			return vertright
@@ -149,20 +147,20 @@ func processEdges(array region2) ([][]edge, [][]edge) {
 	}
 
 	for i := range array {
-		for j := range array[i][:len(array[0]) - 1] {
+		for j := range array[i][:len(array[0])-1] {
 			vertedges[i][j+1] = vertKernel(array[i][j], array[i][j+1])
 		}
 		if array[i][0] == true {
 			vertedges[i][0] = vertleft
 		}
-		if array[i][len(array[i]) - 1] == true {
+		if array[i][len(array[i])-1] == true {
 			vertedges[i][len(array[i])] = vertright
 		}
 	}
 
 	horKernel := func(i1, i2 bool) edge {
 		if i1 != i2 {
-			if (i2 == true) {
+			if i2 == true {
 				return hortop
 			}
 			return horbot
@@ -170,7 +168,7 @@ func processEdges(array region2) ([][]edge, [][]edge) {
 		return none
 	}
 	for j := range array[0] {
-		for i := range array[:len(array) - 1] {
+		for i := range array[:len(array)-1] {
 			horedges[i+1][j] = horKernel(array[i][j], array[i+1][j])
 		}
 		if array[0][j] == true {
@@ -183,7 +181,7 @@ func processEdges(array region2) ([][]edge, [][]edge) {
 	return horedges, vertedges
 }
 
-func getArea (r region2) int {
+func getArea(r region2) int {
 	sum := 0
 	for i := range r {
 		for j := range r[i] {
@@ -202,15 +200,15 @@ func getRegions2(garden gardenMap) []region2 {
 	recRegion = func(i, j int, r region2) {
 		reached[i][j] = true
 		r[i][j] = true
-		nei := neighbours(i, j, len(garden) - 1, len(garden[0]) - 1)
+		nei := neighbours(i, j, len(garden)-1, len(garden[0])-1)
 		for _, n := range nei {
-			if garden[i][j] == garden[n.i][n.j] && !reached[n.i][n.j]{
+			if garden[i][j] == garden[n.i][n.j] && !reached[n.i][n.j] {
 				recRegion(n.i, n.j, r)
 			}
 		}
 	}
 
-	regions := make([]region2, 0, 1 << 10)
+	regions := make([]region2, 0, 1<<10)
 	for i, line := range garden {
 		for j := range line {
 			if !reached[i][j] {
@@ -231,7 +229,6 @@ func make2DArray[T any](height, width int) [][]T {
 	return lines
 }
 
-
 func sol2() {
 	garden := parse("input.txt")
 	regions := getRegions2(garden)
@@ -244,7 +241,6 @@ func sol2() {
 	}
 	fmt.Println(sum)
 }
-
 
 func main() {
 

@@ -7,7 +7,8 @@ import (
 )
 
 type cell int
-const(
+
+const (
 	wall = cell(iota)
 	path
 	reachedHor
@@ -15,7 +16,8 @@ const(
 )
 
 type axis int
-const(
+
+const (
 	horizontal = axis(iota)
 	vertical
 )
@@ -26,18 +28,18 @@ const (
 )
 
 type edge struct {
-	cost int
+	cost     int
 	from, to pos
-	facing axis
+	facing   axis
 }
 
-type pos struct{
+type pos struct {
 	x, y int
 }
 
 type direction struct {
 	x, y int
-	a axis
+	a    axis
 }
 
 type posAndAxis struct {
@@ -48,13 +50,13 @@ type posAndAxis struct {
 //--------------------MinQueue implementation--------------------
 
 type item[T any] struct {
-	val T
+	val  T
 	prio int
 }
 
-type minQueue[T any] []item[T] 
+type minQueue[T any] []item[T]
 
-func (q * minQueue[T])push(e T, prio int) {
+func (q *minQueue[T]) push(e T, prio int) {
 	l := append(*q, item[T]{e, prio})
 	index := len(l) - 1
 	parent := (index - 1) >> 1
@@ -66,7 +68,7 @@ func (q * minQueue[T])push(e T, prio int) {
 	*q = l
 }
 
-func (q * minQueue[T])pop() T {
+func (q *minQueue[T]) pop() T {
 	if q.isEmpty() {
 		panic("pop on empty queue")
 	}
@@ -96,7 +98,7 @@ func (q * minQueue[T])pop() T {
 	return popped.val
 }
 
-func (q minQueue[T])isEmpty() bool {
+func (q minQueue[T]) isEmpty() bool {
 	return len(q) == 0
 }
 
@@ -122,7 +124,7 @@ func parse(fileName string) [][]cell {
 	return grid
 }
 
-func getNeighbours(grid [][]cell, p pos) []posAndAxis{
+func getNeighbours(grid [][]cell, p pos) []posAndAxis {
 	neighbours := make([]posAndAxis, 0, 4)
 	directions := []direction{
 		{1, 0, horizontal},
@@ -140,7 +142,7 @@ func getNeighbours(grid [][]cell, p pos) []posAndAxis{
 	return neighbours
 }
 
-func dijkstra(grid [][]cell, start, end pos) int{
+func dijkstra(grid [][]cell, start, end pos) int {
 	distances := make([][][]int, len(grid))
 	for i := range distances {
 		distances[i] = make([][]int, len(grid[0]))
@@ -150,8 +152,8 @@ func dijkstra(grid [][]cell, start, end pos) int{
 			distances[i][j][1] = -1
 		}
 	}
-	previous := make(map[posAndAxis]posAndAxis, len(grid) * len(grid[0]) * 2)
-	q := make(minQueue[posAndAxis], 0, len(grid) * len(grid[0]))
+	previous := make(map[posAndAxis]posAndAxis, len(grid)*len(grid[0])*2)
+	q := make(minQueue[posAndAxis], 0, len(grid)*len(grid[0]))
 	s := posAndAxis{start, horizontal}
 	var r posAndAxis
 	q.push(s, 0)
@@ -179,7 +181,6 @@ func dijkstra(grid [][]cell, start, end pos) int{
 	return distances[r.p.x][r.p.y][r.a]
 }
 
-
 func sol1() {
 	grid := parse("input.txt")
 	start := pos{1, len(grid) - 2}
@@ -187,7 +188,7 @@ func sol1() {
 	fmt.Println(dijkstra(grid, start, end))
 }
 
-func dijkstra2(grid [][]cell, start, end pos) (map[posAndAxis][]posAndAxis, posAndAxis, posAndAxis){
+func dijkstra2(grid [][]cell, start, end pos) (map[posAndAxis][]posAndAxis, posAndAxis, posAndAxis) {
 	distances := make([][][]int, len(grid))
 	for i := range distances {
 		distances[i] = make([][]int, len(grid[0]))
@@ -197,8 +198,8 @@ func dijkstra2(grid [][]cell, start, end pos) (map[posAndAxis][]posAndAxis, posA
 			distances[i][j][1] = -1
 		}
 	}
-	previous := make(map[posAndAxis][]posAndAxis, len(grid) * len(grid[0]) * 2)
-	q := make(minQueue[posAndAxis], 0, len(grid) * len(grid[0]))
+	previous := make(map[posAndAxis][]posAndAxis, len(grid)*len(grid[0])*2)
+	q := make(minQueue[posAndAxis], 0, len(grid)*len(grid[0]))
 	s := posAndAxis{start, horizontal}
 	var r posAndAxis
 	q.push(s, 0)
@@ -270,7 +271,7 @@ func PrintPath2(grid [][]cell, prev map[posAndAxis][]posAndAxis, to, from posAnd
 			}
 			if c.a == horizontal {
 				grid[c.p.y][c.p.x] = reachedHor
-			}else {
+			} else {
 				grid[c.p.y][c.p.x] = reachedVert
 			}
 			delete(currentCells, c)
@@ -301,7 +302,7 @@ func PrintPath(grid [][]cell, prev map[posAndAxis]posAndAxis, to, from posAndAxi
 	for start != from {
 		if start.a == horizontal {
 			grid[start.p.y][start.p.x] = reachedHor
-		}else {
+		} else {
 			grid[start.p.y][start.p.x] = reachedVert
 		}
 		start = prev[start]

@@ -29,13 +29,13 @@ func parse(fileName string) []stone {
 	return result
 }
 
-func conditionRule1(s stone) bool{
+func conditionRule1(s stone) bool {
 	return s == 0
 }
 
-func conditionRule2(s stone) bool{
+func conditionRule2(s stone) bool {
 	length := int(math.Log10(float64(int(s)))) + 1
-	return length & 1 == 0
+	return length&1 == 0
 }
 
 func conditionRule3(s stone) bool {
@@ -63,19 +63,19 @@ func rule3(s stone) stone {
 	return s * 2024
 }
 
-func blink(stones []stone) []stone{
+func blink(stones []stone) []stone {
 	for i := 0; i < len(stones); i++ {
 
 		if conditionRule1(stones[i]) {
-			stones[i] =  rule1(stones[i])
+			stones[i] = rule1(stones[i])
 
-		} else if  conditionRule2(stones[i]) {
+		} else if conditionRule2(stones[i]) {
 			l, r := rule2(stones[i])
-			stones = slices.Replace(stones, i, i + 1, l, r)
+			stones = slices.Replace(stones, i, i+1, l, r)
 			i++
 
 		} else if conditionRule3(stones[i]) {
-			stones[i] = rule3(stones[i]) 
+			stones[i] = rule3(stones[i])
 		}
 	}
 	return stones
@@ -90,29 +90,29 @@ func sol1() {
 	fmt.Println(len(stones))
 }
 
-func blink2(stones []stone, blinks int) int{
-	mem := make(map[stone][]int, 1 << 10) // 2^10 (might be slightly off)
+func blink2(stones []stone, blinks int) int {
+	mem := make(map[stone][]int, 1<<10) // 2^10 (might be slightly off)
 	var rec func(s stone, b int) int
 	rec = func(s stone, b int) int {
 		sum := 0
 		if b <= 0 {
 			sum = 1
-		} else if values, present := mem[s]; present && values[b] > 0{
+		} else if values, present := mem[s]; present && values[b] > 0 {
 			return values[b]
 
-		}	else if conditionRule1(s) {
-			sum = rec(rule1(s), b - 1)
+		} else if conditionRule1(s) {
+			sum = rec(rule1(s), b-1)
 
-		} else if  conditionRule2(s) {
+		} else if conditionRule2(s) {
 			l, r := rule2(s)
-			sum = rec(l, b - 1) + rec(r, b - 1)
+			sum = rec(l, b-1) + rec(r, b-1)
 
 		} else if conditionRule3(s) {
-			sum = rec(rule3(s), b - 1)
+			sum = rec(rule3(s), b-1)
 		}
 
 		if _, present := mem[s]; !present {
-			mem[s] = make([]int, blinks + 1)
+			mem[s] = make([]int, blinks+1)
 		}
 
 		mem[s][b] = sum
@@ -131,14 +131,13 @@ func sol2() {
 	fmt.Println(blink2(stones, blinks))
 }
 
-func blink3(stones []stone, blinks int) int{
+func blink3(stones []stone, blinks int) int {
 
-	mem := make(map[stone]int, 1 << 10)
+	mem := make(map[stone]int, 1<<10)
 	for _, s := range stones {
 		mem[s]++
 	}
-	newMem := make(map[stone]int, 1 << 10)
-
+	newMem := make(map[stone]int, 1<<10)
 
 	for i := 0; i < blinks; i++ {
 		for key := range newMem {

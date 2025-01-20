@@ -7,6 +7,7 @@ import (
 )
 
 type stripe int
+
 const (
 	white = stripe(iota)
 	blue
@@ -70,12 +71,12 @@ func startsWidth[T comparable](s []T, prefix []T) bool {
 func solve(patterns []pattern, designs []pattern) []int {
 	res := make([]int, len(designs))
 	for i, design := range designs {
-		acc := make([]int, len(design) + 1)
+		acc := make([]int, len(design)+1)
 		acc[0] = 1
 		for j := range acc {
 			for _, patt := range patterns {
 				if startsWidth(design[j:], patt) {
-					acc[j + len(patt)] += acc[j]
+					acc[j+len(patt)] += acc[j]
 				}
 			}
 		}
@@ -87,7 +88,7 @@ func solve(patterns []pattern, designs []pattern) []int {
 func sol1() {
 	patterns, designs := parse("input.txt")
 	waysToReach := solve(patterns, designs)
-	sum := 0 
+	sum := 0
 	for _, val := range waysToReach {
 		if val != 0 {
 			sum++
@@ -99,7 +100,7 @@ func sol1() {
 func sol2() {
 	patterns, designs := parse("input.txt")
 	waysToReach := solve(patterns, designs)
-	sum := 0 
+	sum := 0
 	for _, val := range waysToReach {
 		sum += val
 	}

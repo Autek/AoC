@@ -7,7 +7,6 @@ import (
 	"strings"
 )
 
-
 type ID int
 
 type option[T any] struct {
@@ -87,11 +86,11 @@ func printDisk(disk []option[ID]) {
 
 func compact(disk []option[ID]) {
 	leftStart := 0
-	for i := len(disk) - 1; i > leftStart; i--{
+	for i := len(disk) - 1; i > leftStart; i-- {
 		if disk[i].isNone() {
 			continue
 		}
-		for j := leftStart; j < i; j++{
+		for j := leftStart; j < i; j++ {
 			if disk[j].isNone() {
 				disk[j] = disk[i]
 				disk[i] = none[ID]()
@@ -123,9 +122,9 @@ func getSize(disk []option[ID], dir int, start int, isFile bool) int {
 	size := 0
 	val := none[ID]()
 	for i := start; i < len(disk) && i >= 0; i += dir {
-		if i < 0 || i >= len(disk) || disk[i].isSome() != isFile{
+		if i < 0 || i >= len(disk) || disk[i].isSome() != isFile {
 			break
-		} 
+		}
 		if isFile && val.isSome() && val.unwrap() != disk[i].unwrap() {
 			break
 		}
@@ -137,26 +136,26 @@ func getSize(disk []option[ID], dir int, start int, isFile bool) int {
 
 func swap(disk []option[ID], from int, to int, size int) {
 	for i := 0; i < size; i++ {
-		disk[to + i] = disk[from + i]
-		disk[from + i] = none[ID]()
+		disk[to+i] = disk[from+i]
+		disk[from+i] = none[ID]()
 	}
 }
 
 func compact2(disk []option[ID]) {
-	for i := len(disk) - 1; i > 0;{
+	for i := len(disk) - 1; i > 0; {
 		if disk[i].isNone() {
 			i -= getSize(disk, -1, i, false)
 			continue
 		}
 		fileSize := getSize(disk, -1, i, true)
-		for j := 0; j < i;{
+		for j := 0; j < i; {
 			if disk[j].isSome() {
 				j += getSize(disk, 1, j, true)
 				continue
 			}
 			gapSize := getSize(disk, 1, j, false)
 			if gapSize >= fileSize {
-				swap(disk, i - fileSize + 1, j, fileSize)
+				swap(disk, i-fileSize+1, j, fileSize)
 				break
 			}
 			j += gapSize

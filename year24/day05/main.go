@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type relation struct{
+type relation struct {
 	from, to int
 }
 
@@ -24,7 +24,7 @@ func parse(fileName string) (map[relation]struct{}, []update) {
 	updates := strings.TrimSpace(relationsUpdates[1])
 	splitRelations := strings.Split(relations, "\n")
 	relMap := map[relation]struct{}{}
-	for _, rel_str := range splitRelations{
+	for _, rel_str := range splitRelations {
 		relNb := strings.Split(rel_str, "|")
 		from, err := strconv.Atoi(relNb[0])
 		if err != nil {
@@ -55,7 +55,7 @@ func parse(fileName string) (map[relation]struct{}, []update) {
 	return relMap, updateList
 }
 
-func sol1(){
+func sol1() {
 	relations, updates := parse("input.txt")
 	sum := 0
 	comparator := func(a int, b int) int {
@@ -70,15 +70,14 @@ func sol1(){
 
 	for _, u := range updates {
 		if slices.IsSortedFunc(u, comparator) {
-			sum += u[(len(u) - 1) / 2]
+			sum += u[(len(u)-1)/2]
 
 		}
 	}
 	fmt.Println(sum)
 }
 
-
-func sol2(){
+func sol2() {
 	relations, updates := parse("input.txt")
 	sum := 0
 	comparator := func(a int, b int) int {
@@ -94,13 +93,13 @@ func sol2(){
 	for _, u := range updates {
 		if !slices.IsSortedFunc(u, comparator) {
 			slices.SortFunc(u, comparator)
-			sum += u[(len(u) - 1) / 2]
+			sum += u[(len(u)-1)/2]
 		}
 	}
 	fmt.Println(sum)
 }
 
-func main(){
+func main() {
 	sol1()
 	sol2()
 }
